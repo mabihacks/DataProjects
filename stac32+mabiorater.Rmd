@@ -1,0 +1,80 @@
+---
+title: "Assignment 7"
+author: "Mabior Ater"
+date: "08/11/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r}
+library(tidyverse) # QUESTION 2
+my_url <- "http://ritsokiguess.site/STAC32/dolphins.csv"
+span <- read_csv(my_url)
+span
+names(span)
+span %>% select(mercury,sex)
+```
+```{r}
+span %>% select(matches("^.t$"))
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+span %>% filter(sex == "female")
+```
+```{r}
+span %>% filter(age < 15) -> mean_1
+mean_1
+mean(mean_1$mercury)
+span %>% filter(age > 25) -> mean_2
+mean_2
+mean(mean_2$mercury)
+median(mean_2$mercury)
+median(mean_1$mercury)
+```
+```{r}
+ggplot(span, aes(x = sex, y = mercury)) + geom_boxplot()
+
+```
+For the graph, it gravitates for a negatively skewed, so it shows on the boxplot of a median closer to the uper quatiles. Hence the data constitute of higher frequencies of low valued scores, and we can recognize this when comparing the mean and median. Median (315) > mean2. 
+
+```{r}
+span %>%
+  mutate(fs = factor(sex)) %>%
+  pivot_longer(age:mercury, names_to="ball", values_to="distance") %>% 
+  ggplot(aes(x = ball, y = distance, group = sex, colour = sex)) +
+  geom_point() + geom_line()
+```
+
+#QUESTION 1
+```{r cars}
+myurl <- "http://ritsokiguess.site/STAC32/utils.txt"
+j_y <- read_delim(myurl," ")
+j_y
+```
+
+
+
+```{r pressure, echo=FALSE}
+j_y %>% pivot_longer(`31`:`56`, names_to="old_cols", values_to="values") -> cars 
+cars #tidy data attempt
+```
+
+```{r}
+mytidy <- "http://ritsokiguess.site/STAC32/utils_tidy.csv"
+read_csv(mytidy) -> memmk
+memmk 
+```
+
+```{r}
+# graph 
+ggplot(memmk, aes(x = memmk$consumption, y = memmk$temperature)) + geom_point() + geom_smooth()
+```
+*d)* The patterns I see on the graph is a slight upward trend based on the smooth trend but i do see there consist of outliers that are bit too low and high. But, the data shows the trend of upward move, thus detailing the temperature and consumption are positively correlated.
