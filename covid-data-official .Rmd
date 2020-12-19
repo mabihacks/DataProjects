@@ -1,0 +1,116 @@
+---
+title: "Covid-19 Dataset"
+author: "Mabior Ater"
+date: "3/30/2020"
+output: pdf_document
+---
+
+
+```{r code 300}
+library(readr)
+official_data <- read_csv("~/Desktop/Year 3 UofT/official data.csv")
+names(official_data)
+set.seed(1837)
+honors=subset(official_data,official_data$deaths>=100)
+honors# evaluate case for countries with 100 + deaths 
+```
+
+```{r code 3040040300}
+install.packages("GGally",repos = "http://cran.us.r-project.org")
+library(GGally)
+ggpairs(data=honors, columns=5:6, title="honors data")
+ggplot(data = honors, aes(x = honors$deaths, y = honors$cases)) +
+geom_point() +
+stat_smooth(method = "lm", col = "dodgerblue3") +
+theme(panel.background = element_rect(fill = "white"),
+axis.line.x=element_line(),
+axis.line.y=element_line()) +
+ggtitle("Linear Model Fitted to Data") 
+```
+
+```{r code 30043020}
+df2 <- honors[order(honors$deaths,decreasing=T),]
+max_vals <- df2[!duplicated(df2$countriesandterritories),]
+ # obtain max values of deaths and removes duplicate of countries 
+max_vals
+```
+
+```{r code 3040220303}
+ggplot(data = max_vals, aes(x = max_vals$deaths, y = max_vals$cases)) +
+geom_point() +
+stat_smooth(method = "lm", col = "dodgerblue3") +
+theme(panel.background = element_rect(fill = "white"),
+axis.line.x=element_line(),
+axis.line.y=element_line()) +
+ggtitle("Linear Model Fitted to Data") 
+```
+
+```{r code 0404}
+install.packages("GGally",repos = "http://cran.us.r-project.org")
+library(GGally)
+ggpairs(data=max_vals, columns=5:6, title="honors data")
+```
+
+```{r code 3040402}
+# for sample less than 100  
+honors_x=subset(official_data,official_data$deaths<=100)
+honors_x # evaluate case for countries with n < 100  deaths 
+```
+
+```{r code 3004}
+install.packages("GGally",repos = "http://cran.us.r-project.org")
+library(GGally)
+ggpairs(data= honors_x, columns=5:6, title="honors_x data")
+```
+```{r code 303002020}
+df3 <- honors_x[order(honors_x$deaths,decreasing=T),]
+max_vals_x <- df3[!duplicated(df3$countriesandterritories),]
+ # obtain max values of deaths and removes duplicate of countries 
+max_vals_x # sample 
+```
+```{R CODE 202003}
+ggplot(data = honors_x, aes(x = honors_x$deaths, y = honors_x$cases)) +
+geom_point() +
+stat_smooth(method = "lm", col = "dodgerblue3") +
+theme(panel.background = element_rect(fill = "white"),
+axis.line.x=element_line(),
+axis.line.y=element_line()) +
+ggtitle("Linear Model Fitted to Data")  #linear model of n<100 cases 
+```
+```{r code 2003030}
+ggplot(data = max_vals_x, aes(x = max_vals_x$deaths, y = max_vals_x$cases)) +
+geom_point() +
+stat_smooth(method = "lm", col = "dodgerblue3") +
+theme(panel.background = element_rect(fill = "white"),
+axis.line.x=element_line(),
+axis.line.y=element_line()) +
+ggtitle("Linear Model Fitted to Data")  #linear model of n <100 countries
+``` 
+
+```{r code 3003040403}
+#check for linear assumption 
+#check for residuals close to zero
+mean(model$residuals) # close to zero 
+mean(model_x$residuals) # close to zero 
+```
+
+```{r code 203000200}
+model <- lm(max_vals$deaths ~ max_vals$cases, data = max_vals, col = 'purple')
+summary(model) # regression of the systematic sample of n >= 100
+model_x <- lm(max_vals_x$deaths ~ max_vals_x$cases, data = max_vals_x, col = 'red')
+summary(model_x) # regression of the systematic sample of n <= 100
+```
+**AMONG BOTH CASES of n >= 100 and n<=100, we can see that countries in N <100 are more prone to Covid-19,** 
+**consist of a high correlation (.69)**
+
+
+```{r code 3002020}
+plot(model_x)
+```
+
+```{r code 3003022}
+plot(model)
+```
+
+
+
